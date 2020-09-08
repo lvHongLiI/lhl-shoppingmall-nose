@@ -17,7 +17,7 @@
             <i class="iconfont icon-search"></i>
             <router-link tag="span" class="search-title" to="./product-list?from=home">山河无恙，人间皆安</router-link>
         </div>
-        <a class="login"  href="#" @click="logout" v-if="true">退出登录</a>
+        <a class="login"  href="#" @click="logout" v-if="isLogin">退出登录</a>
         <router-link class="login" tag="span" to="./login" v-if="!isLogin">登录</router-link>
         <router-link class="login" tag="span" to="./user" v-else>
           我的
