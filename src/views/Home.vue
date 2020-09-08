@@ -17,7 +17,7 @@
             <i class="iconfont icon-search"></i>
             <router-link tag="span" class="search-title" to="./product-list?from=home">山河无恙，人间皆安</router-link>
         </div>
-        <router-link class="login" tag="span" @click="logout" to="./login" v-if="isLogin">退出登录</router-link>
+        <a class="login"  href="#" @click="logout" v-if="true">退出登录</a>
         <router-link class="login" tag="span" to="./login" v-if="!isLogin">登录</router-link>
         <router-link class="login" tag="span" to="./user" v-else>
           我的
@@ -139,7 +139,7 @@ export default {
   },
   async mounted() {
     const token = getLocal('token')
-    console.log("token"+token)
+    console.log("token "+token)
     if (token!='null'&&token!=''&&token!=null) {
       this.isLogin = true
     }
@@ -166,6 +166,7 @@ export default {
     logout(){
         setLocal("token","")
         this.isLogin=false;
+        this.$router.push('/login');
     }
   }
 }
