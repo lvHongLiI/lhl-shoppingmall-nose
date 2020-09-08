@@ -23,7 +23,7 @@ import AddressEdit from '../views/AddressEdit.vue'
 import Login from '../views/Login.vue'
 import About from '../views/About.vue'
 import CreateOrder from '../views/CreateOrder.vue'
-
+import Register from '../views/Register.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -36,6 +36,14 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
+    meta: {
+      index: 2
+    }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register,
     meta: {
       index: 2
     }

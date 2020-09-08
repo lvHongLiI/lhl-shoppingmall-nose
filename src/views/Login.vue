@@ -10,13 +10,13 @@
 
 <template>
   <div class="login">
-    <s-header :name="type == 'login' ? '登录' : '注册'" :back="'/home'"></s-header>
+    <s-header :name=" '登录'" :back="'/home'"></s-header>
     <img class="logo" src="//s.weituibao.com/1582958061265/mlogo.png" alt="">
-    <div v-if="type == 'login'" class="login-body login">
+    <div class="login-body login">
       <van-form @submit="onSubmit">
         <van-field
-          v-model="username"
-          name="username"
+          v-model="account"
+          name="account"
           label="用户名"
           placeholder="用户名"
           :rules="[{ required: true, message: '请填写用户名' }]"
@@ -33,12 +33,12 @@
           <Verify ref="loginVerifyRef" @error="error" :showButton="false" @success="success" :width="'100%'" :height="'40px'" :fontSize="'16px'" :type="2"></Verify>
         </div>
         <div style="margin: 16px;">
-          <div class="link-register" @click="toggle('register')">立即注册</div>
+            <router-link   class="link-register" tag="span" to="./register" >立即注册</router-link>
           <van-button round block type="info" color="#1baeae" native-type="submit">登录</van-button>
         </div>
       </van-form>
     </div>
-    <div v-else class="login-body register">
+    <!--<div v-else class="login-body register">
       <van-form @submit="onSubmit">
         <van-field
           v-model="username1"
@@ -63,7 +63,7 @@
           <van-button round block type="info" color="#1baeae" native-type="submit">注册</van-button>
         </div>
       </van-form>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -76,7 +76,7 @@ import Verify from 'vue2-verify'
 export default {
   data() {
     return {
-      username: '',
+      account: '',
       password: '',
       username1: '',
       password1: '',
@@ -92,9 +92,8 @@ export default {
     dealTriVer() {
       this.$refs.loginVerifyRef.$refs.instance.checkCode()
     },
-    toggle(v) {
-      this.verify = false
-      this.type = v
+    toggle() {
+      window.location.href = '/register'
     },
     async onSubmit(values) {
       this.dealTriVer()
@@ -102,21 +101,13 @@ export default {
         Toast.fail('验证码未填或填写错误!')
         return
       }
-      if (this.type == 'login') {
-        const { data, resultCode } = await login({
-          "loginName": values.username,
-          "passwordMd5": this.$md5(values.password)
-        })
-        setLocal('token', data)
-        window.location.href = '/'
-      } else {
-        const { data } = await register({
-          "loginName": values.username1,
-          "password": values.password1
-        })
-        Toast.success('注册成功')
-        this.type = 'login'
-      }
+      let data = await login({
+        "account": values.account,
+        "password": values.password
+      })
+      setLocal('token', data.token)
+      window.location.href = '/'
+
     },
     success(obj) {
       this.verify = true

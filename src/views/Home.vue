@@ -17,9 +17,10 @@
             <i class="iconfont icon-search"></i>
             <router-link tag="span" class="search-title" to="./product-list?from=home">山河无恙，人间皆安</router-link>
         </div>
+        <router-link class="login" tag="span" @click="logout" to="./login" v-if="isLogin">退出登录</router-link>
         <router-link class="login" tag="span" to="./login" v-if="!isLogin">登录</router-link>
         <router-link class="login" tag="span" to="./user" v-else>
-          <van-icon name="manager-o" />
+          我的
         </router-link>
     </header>
     <nav-bar></nav-bar>
@@ -75,6 +76,7 @@ import swiper from '@/components/Swiper'
 import { getHome } from '../service/home'
 import { getUserInfo } from '../service/user'
 import { getLocal } from '@/common/js/utils'
+import { setLocal } from '@/common/js/utils'
 import { Toast } from 'vant'
 export default {
   name: 'home',
@@ -137,7 +139,8 @@ export default {
   },
   async mounted() {
     const token = getLocal('token')
-    if (token) {
+    console.log("token"+token)
+    if (token!='null'&&token!=''&&token!=null) {
       this.isLogin = true
     }
     window.addEventListener('scroll', this.pageScroll)
@@ -159,6 +162,10 @@ export default {
     },
     goToDetail(item) {
       this.$router.push({ path: `product/${item.goodsId}` })
+    },
+    logout(){
+        setLocal("token","")
+        this.isLogin=false;
     }
   }
 }

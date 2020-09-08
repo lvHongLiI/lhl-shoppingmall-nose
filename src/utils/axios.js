@@ -10,7 +10,7 @@
 import axios from 'axios'
 import { Toast } from 'vant'
 
-axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? '//localhost:28019' : 'localhost:28019'
+axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? '//localhost:8010' : 'localhost:8010'
 axios.defaults.withCredentials = true
 axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
 axios.defaults.headers['token'] = localStorage.getItem('token') || ''
@@ -21,14 +21,13 @@ axios.interceptors.response.use(res => {
     Toast.fail('服务端异常！')
     return Promise.reject(res)
   }
-  if (res.data.resultCode != 200) {
+  if (res.data.status != 200) {
     if (res.data.message) Toast.fail(res.data.message)
-    if (res.data.resultCode == 416) {
+    if (res.data.status == 416) {
       window.vRouter.push({ path: '/login' })
     }
     return Promise.reject(res.data)
   }
-
   return res.data
 })
 

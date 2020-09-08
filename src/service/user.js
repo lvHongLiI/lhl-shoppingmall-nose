@@ -18,7 +18,7 @@ export function EditUserInfo(params) {
 }
 
 export function login(params) {
-  return axios.post('/user/login', params);
+  return axios.post('/platformUser/login', params);
 }
 
 export function logout() {
@@ -26,6 +26,6 @@ export function logout() {
 }
 
 export function register(params) {
-  return axios.post('/user/register', params);
+  return axios.post('/platformUser/register', params);
 }
 
