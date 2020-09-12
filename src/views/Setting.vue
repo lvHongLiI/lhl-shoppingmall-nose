@@ -12,7 +12,7 @@
   <div class="seting-box">
     <s-header :name="'账号管理'"></s-header>
     <div class="input-item">
-      <van-field v-model="nickName" label="昵称" />
+      <van-field v-model="name" label="昵称" />
       <van-field v-model="introduceSign" label="个性签名" />
       <van-field v-model="password" type='password' label="修改密码" />
     </div>
@@ -32,22 +32,22 @@ export default {
   },
   data() {
     return {
-      nickName: '',
-      introduceSign: '',
+      name: '',
+      introduceSign: '无',
       password: ''
     }
   },
   async mounted() {
     const { data } = await getUserInfo()
-    this.nickName = data.nickName
-    this.introduceSign = data.introduceSign
+    this.name = data.name
+    //this.introduceSign = data.introduceSign
   },
   methods: {
     async save() {
       const params = {
         introduceSign: this.introduceSign,
         nickName: this.nickName,
-        passwordMd5: this.$md5(this.password)
+        password: this.password
       }
       const { data } = await EditUserInfo(params)
       Toast.success('保存成功')

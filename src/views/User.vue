@@ -15,9 +15,9 @@
       <div class="info">
         <img src="//s.weituibao.com/1583583975067/user-graduate%20(1).png"/>
         <div class="user-desc">
-          <span>昵称：{{ user.nickName }}</span>
-          <span>登录名：{{ user.loginName }}</span>
-          <span class="name">个性签名：{{ user.introduceSign }}</span>
+          <span>昵称：{{ user.name }}</span>
+          <span>账号：{{ user.account }}</span>
+          <span class="name">个性签名：无</span>
         </div>
       </div>
     </div>

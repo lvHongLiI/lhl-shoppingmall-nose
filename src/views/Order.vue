@@ -11,39 +11,34 @@
 <template>
   <div class="order-box">
     <s-header :name="'我的订单'" :back="'/user'"></s-header>
-    <van-tabs @change="onChangeTab" :color="'#1baeae'" :title-active-color="'#1baeae'" class="order-tab" v-model="status">
+    <van-tabs @change="onChangeTab"  type="card" :color="'black'" :title-active-color="'#1baeae'" class="order-tab" v-model="status">
       <van-tab title="全部" name=''></van-tab>
-      <van-tab title="待付款" name="0"></van-tab>
-      <van-tab title="待确认" name="1"></van-tab>
+      <van-tab title="待付款" name="1"></van-tab>
       <van-tab title="待发货" name="2"></van-tab>
-      <van-tab title="已发货" name="3"></van-tab>
+      <van-tab title="待收货" name="3"></van-tab>
       <van-tab title="交易完成" name="4"></van-tab>
+      <van-tab title="退款/售后" name="5"></van-tab>
     </van-tabs>
-    <van-pull-refresh v-model="refreshing" @refresh="onRefresh" class="order-list-refresh">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-        @offset="300"
-      >
-        <div v-for="(item, index) in list" :key="index" class="order-item-box" @click="goTo(item.orderNo)">
-          <div class="order-item-header">
-            <span>订单时间：{{ item.createTime }}</span>
-            <span>{{ item.orderStatusString }}</span>
-          </div>
-          <van-card
-            v-for="one in item.newBeeMallOrderItemVOS"
-            :key="one.orderId"
-            :num="one.goodsCount"
-            :price="one.sellingPrice"
-            desc="全场包邮"
-            :title="one.goodsName"
-            :thumb="`//api.newbee.ltd${one.goodsCoverImg}`"
-          />
+
+    <div id="example-1" >
+      <div  v-for="(item,index) in list" :key="index" class="order-item-box" @click="goTo(item.orderNo)">
+        <div class="order-item-header">
+          <span style="font-size: 15px">订单时间：{{item.createTime}}</span>
+          <span style="font-size: 20px;float: right" >状态：{{item.status}}</span>
+          <span style="font-size: 20px">金额（¥）：{{item.totalPrice}} 元</span>
         </div>
-      </van-list>
-    </van-pull-refresh>
+        <van-card
+          v-for="one in item.items"
+          :key="one.id"
+          :currency='$'
+          :num="one.goodsCount"
+          :price="one.sellingPrice"
+           desc="全场包邮"
+          :title="one.goodsName"
+          :thumb="one.goodsImg"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -55,30 +50,24 @@ export default {
   data() {
     return {
       status: '',
-      loading: false,
-      finished: false,
-      refreshing: false,
-      list: [],
-      page: 1
+      list: []
     }
   },
   components: {
     sHeader
   },
   async mounted() {
-    // this.loadData()
+    this.loadData()
   },
   methods: {
     async loadData() {
-      const { data, data: { list } } = await getOrderList({ pageNumber: this.page, status: this.status })
-      this.list = this.list.concat(list)
-      this.totalPage = data.totalPage
-      this.loading = false;
-      if (this.page >= data.totalPage) this.finished = true
+      const { data} = await getOrderList(this.status)
+      this.list=data
+      console.log(this.list)
     },
     onChangeTab(name, title) {
       this.status = name
-      this.onRefresh()
+      this.loadData()
     },
     goTo(id) {
       this.$router.push({ path: `order-detail?id=${id}` })
@@ -86,23 +75,8 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
-    onLoad() {
-      if (!this.refreshing && this.page < this.totalPage) {
-        this.page = this.page + 1
-      }
-      if (this.refreshing) {
-        this.list = [];
-        this.refreshing = false;
-      }
-      this.loadData()
-    },
-    onRefresh() {
-      this.refreshing = true
-      this.finished = false
-      this.loading = true
-      this.page = 1
-      this.onLoad()
-    },
+
+
   }
 }
 </script>
@@ -134,33 +108,18 @@ export default {
       z-index: 1000;
       width: 100%;
     }
-    .order-list-refresh {
-      margin-top: 68px;
-      .van-card__content {
+
+    .order-item-box {
+      margin: 100px 10px;
+      background-color: #fff;
+      .order-item-header {
+        padding: 10px 20px 0 20px;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
       }
-      .van-pull-refresh__head {
-        background: #f9f9f9;
-      }
-      .van-list {
-        min-height: calc(100vh - 88px);
-        background: #f9f9f9;
-        margin-top: 20px;
-      }
-      .order-item-box {
-        margin: 20px 10px;
+      .van-card {
         background-color: #fff;
-        .order-item-header {
-          padding: 10px 20px 0 20px;
-          display: flex;
-          justify-content: space-between;
-        }
-        .van-card {
-          background-color: #fff;
-          margin-top: 0;
-        }
+        margin-top: 0;
       }
     }
   }

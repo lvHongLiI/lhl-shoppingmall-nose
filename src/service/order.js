@@ -14,7 +14,7 @@ export function createOrder(params) {
 }
 
 export function getOrderList(params) {
-  return axios.get('/order', { params });
+  return axios.get('/userOrder/getOrder?status='+params);
 }
 
 export function getOrderDetail(id) {

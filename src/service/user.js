@@ -10,11 +10,11 @@
 import axios from '../utils/axios'
 
 export function getUserInfo() {
-  return axios.get('/user/info');
+  return axios.get('/platformUser/getInfo');
 }
 
 export function EditUserInfo(params) {
-  return axios.put('/user/info', params);
+  return axios.put('/platformUser/update', params);
 }
 
 export function login(params) {

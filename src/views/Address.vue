@@ -51,11 +51,11 @@ export default {
     const { data } = await getAddressList()
     this.list = data.map(item => {
       return {
-        id: item.addressId,
-        name: item.userName,
-        tel: item.userPhone,
-        address: `${item.provinceName} ${item.cityName} ${item.regionName} ${item.detailAddress}`,
-        isDefault: !!item.defaultFlag
+        id: item.id,
+        name: item.receiver,
+        tel: item.tel,
+        address: `${item.province} ${item.city} ${item.county} ${item.position}`,
+        isDefault: item.isDefault==1
       }
     })
   },

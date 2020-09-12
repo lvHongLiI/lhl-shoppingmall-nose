@@ -61,57 +61,62 @@ export default {
         tdist.getLev3(c.id).forEach(q => _county_list[q.id] = q.text)
       })
     })
-    this.areaList.province_list = _province_list
-    this.areaList.city_list = _city_list
-    this.areaList.county_list = _county_list
+    this.areaList.province_list = _province_list /*省*/
+    this.areaList.city_list = _city_list /*市*/
+    this.areaList.county_list = _county_list /*区*/
 
     const { addressId, type, from } = this.$route.query
     this.addressId = addressId
     this.type = type
     this.from = from || ''
     if (type == 'edit') {
-      const { data: addressDetail } = await getAddressDetail(addressId)
+      const { data: detail } = await getAddressDetail(addressId)
       let _areaCode = ''
       const province = tdist.getLev1()
       Object.entries(this.areaList.county_list).forEach(([id, text]) => {
         // 先找出当前对应的区
-        if (text == addressDetail.regionName) {
+        if (text == detail.county) {
           // 找到区对应的几个省份
           const provinceIndex = province.findIndex(item => item.id.substr(0, 2) == id.substr(0, 2))
           // 找到区对应的几个市区
           const cityItem = Object.entries(this.areaList.city_list).filter(([cityId, cityName]) => cityId.substr(0, 4) == id.substr(0, 4))[0]
+          console.log(province[provinceIndex].text+":"+ detail.province)
+          console.log(cityItem[1]+":"+detail.city)
+          console.log(province[provinceIndex].text == detail.province && cityItem[1] == detail.city)
           // 对比找到的省份和接口返回的省份是否相等，因为有一些区会重名
-          if (province[provinceIndex].text == addressDetail.provinceName && cityItem[1] == addressDetail.cityName) {
+          if (province[provinceIndex].text == detail.province && cityItem[1] == detail.city) {
             _areaCode = id
+
           }
+
         }
       })
       this.addressInfo = {
-        id: addressDetail.addressId,
-        name: addressDetail.userName,
-        tel: addressDetail.userPhone,
-        province: addressDetail.provinceName,
-        city: addressDetail.cityName,
-        county: addressDetail.regionName,
-        addressDetail: addressDetail.detailAddress,
+        id: detail.id,
+        name: detail.receiver,
+        tel: detail.tel,
+        province: detail.province,
+        city: detail.city,
+        county: detail.county,
+        addressDetail: detail.position,
         areaCode: _areaCode,
-        isDefault: !!addressDetail.defaultFlag
+        isDefault: detail.isDefault==1
       }
     }
   },
   methods: {
     async onSave(content) {
       const params = {
-        userName: content.name,
-        userPhone: content.tel,
-        provinceName: content.province,
-        cityName: content.city,
-        regionName: content.county,
-        detailAddress: content.addressDetail,
-        defaultFlag: content.isDefault ? 1 : 0,
+        receiver: content.name,
+        tel: content.tel,
+        province: content.province,
+        city: content.city,
+        county: content.county,
+        position: content.addressDetail,
+        isDefault: content.isDefault?1:0
       }
       if (this.type == 'edit') {
-        params['addressId'] = this.addressId
+        params['id'] = this.addressId
       }
       const { message } = await this.type == 'add' ? addAddress(params) : EditAddress(params)
       Toast('保存成功')

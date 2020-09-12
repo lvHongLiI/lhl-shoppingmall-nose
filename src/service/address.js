@@ -10,11 +10,11 @@
 import axios from '../utils/axios'
 
 export function addAddress(params) {
-  return axios.post('/address', params);
+  return axios.post('/uerAddress/add',params);
 }
 
 export function EditAddress(params) {
-  return axios.put('/address', params);
+  return axios.put('/uerAddress/update', params);
 }
 
 export function DeleteAddress(id) {
@@ -26,11 +26,11 @@ export function getDefaultAddress() {
 }
 
 export function getAddressList() {
-  return axios.get('/address', { pageNumber: 1, pageSize: 1000 })
+  return axios.get('/uerAddress/getUserAddress')
 }
 
 export function getAddressDetail(id) {
-  return axios.get(`/address/${id}`)
+  return axios.get(`/uerAddress/selectById/${id}`)
 }
 
 
