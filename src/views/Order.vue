@@ -21,10 +21,10 @@
     </van-tabs>
 
     <div id="example-1" >
-      <div  v-for="(item,index) in list" :key="index" class="order-item-box" @click="goTo(item.orderNo)">
+      <div  v-for="(item,index) in list" :key="index" class="order-item-box" @click="goTo(item.id)">
         <div class="order-item-header">
           <span style="font-size: 15px">订单时间：{{item.createTime}}</span>
-          <span style="font-size: 20px;float: right" >状态：{{item.status}}</span>
+          <span style="font-size: 20px;float: right" >状态：{{item.statusName}}</span>
           <span style="font-size: 20px">金额（¥）：{{item.totalPrice}} 元</span>
         </div>
         <van-card

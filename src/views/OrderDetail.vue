@@ -14,19 +14,35 @@
     <div class="order-status">
       <div class="status-item">
         <label>订单状态：</label>
-        <span>{{ detail.orderStatusString }}</span>
+        <span>{{ detail.statusName }}</span>
+      </div>
+      <div class="status-item" v-if="detail.payType!=null">
+        <label>支付方式：</label>
+        <span>{{ detail.payTypeName }}</span>
       </div>
       <div class="status-item">
         <label>订单编号：</label>
-        <span>{{ detail.orderNo }}</span>
+        <span>{{ detail.id }}</span>
+      </div>
+      <div class="status-item">
+        <label>交易流水号：</label>
+        <span>{{ detail.tradeNumber }}</span>
       </div>
       <div class="status-item">
         <label>下单时间：</label>
         <span>{{ detail.createTime }}</span>
       </div>
       <!-- <van-button v-if="[1,2,3].includes(detail.orderStatus)" style="margin-bottom: 10px" color="#1baeae" block @click="confirmOrder(detail.orderNo)">确认订单</van-button> -->
-      <van-button v-if="detail.orderStatus == 0" style="margin-bottom: 10px" color="#1baeae" block @click="showPayFn">去支付</van-button>
-      <van-button v-if="!(detail.orderStatus < 0 || detail.orderStatus == 4)" block @click="cancelOrder(detail.orderNo)">取消订单</van-button>
+      <van-button v-if="detail.status ==1" style="margin-bottom: 10px" color="#1baeae" block @click="showPayFn">去支付</van-button>
+      <div v-if="detail.status==2">
+        <van-button v-if="detail.deliveryStatus<=5" block @click="cancelOrder(detail.id)">退货/退款</van-button>
+        <van-button v-if="detail.deliveryStatus==5" block @click="cancelOrder(detail.id)">确认收货</van-button>
+        <van-button v-if="detail.deliveryStatus==7" block @click="cancelOrder(detail.id)">去评价</van-button><!--这个东西待考虑是否去做-->
+      </div>
+
+
+      <van-button v-if="detail.status=='待退款'" block >取消退款</van-button>
+      <van-button v-if="detail.status=='交易完成'" block >待评价</van-button>
     </div>
     <div class="order-price">
       <div class="price-item">
@@ -39,14 +55,14 @@
       </div>
     </div>
     <van-card
-      v-for="item in detail.newBeeMallOrderItemVOS"
+      v-for="item in detail.items"
       :key="item.goodsId"
       style="background: #fff"
       :num="item.goodsCount"
       :price="item.sellingPrice"
       desc="全场包邮"
       :title="item.goodsName"
-      :thumb="`//api.newbee.ltd${item.goodsCoverImg}`"
+      :thumb="item.goodsImg"
     />
     <van-popup
       v-model="showPay"
