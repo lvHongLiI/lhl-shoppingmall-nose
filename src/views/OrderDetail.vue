@@ -39,10 +39,6 @@
         <van-button v-if="detail.deliveryStatus==5" block @click="cancelOrder(detail.id)">确认收货</van-button>
         <van-button v-if="detail.deliveryStatus==7" block @click="cancelOrder(detail.id)">去评价</van-button><!--这个东西待考虑是否去做-->
       </div>
-
-
-      <van-button v-if="detail.status=='待退款'" block >取消退款</van-button>
-      <van-button v-if="detail.status=='交易完成'" block >待评价</van-button>
     </div>
     <div class="order-price">
       <div class="price-item">
