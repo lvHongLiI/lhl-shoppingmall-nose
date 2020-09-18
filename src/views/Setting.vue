@@ -15,6 +15,13 @@
       <van-field v-model="name" label="昵称" />
       <van-field v-model="introduceSign" label="个性签名" />
       <van-field v-model="password" type='password' label="修改密码" />
+      <van-field  type="file"
+                  @change="uploadFile"
+                  name="请选择"
+                  id="file"
+                  label="上传头像"
+                  accept="image/gif, image/jpeg, image/jpg, image/png, image/svg"
+                  multiple="multiple" />
     </div>
     <van-button class="save-btn" color="#1baeae" type="primary" @click="save" block>保存</van-button>
     <van-button class="save-btn" color="#1baeae" type="primary" @click="logout" block>退出登录</van-button>
@@ -51,6 +58,30 @@ export default {
       }
       const { data } = await EditUserInfo(params)
       Toast.success('保存成功')
+    },
+    uploadFile(file){
+      let $this=this;
+      let oFile=document.getElementById("file").files[0]
+      let form = new FormData();
+      form.append('file',oFile);
+      let xhr = new XMLHttpRequest();
+      xhr.open('post','http://localhost:8000/file/uploadFile?type=head',true);
+      xhr.timeout = 30 * 1000;
+      xhr.upload.onprogress = this.progress;
+      xhr.onload = function (data) {
+        let url=JSON.parse(data.currentTarget.response).decryptUrl;
+        $this.headUrl=url;
+
+      };
+      xhr.onerror = function (data) {
+        let message=JSON.parse(data.currentTarget.response).message;
+        alert(message)
+      };
+      xhr.upload.onloadstart = () => {
+        let date = new Date().getTime();
+        let initSize = 0;
+      }
+      xhr.send(form);
     },
     async logout() {
       const { resultCode } = await logout()

@@ -19,6 +19,13 @@
           <span>账号：{{ user.account }}</span>
           <span class="name">个性签名：无</span>
         </div>
+        <div style="float: right;margin-left: 1000px">
+          <el-table-column label="头像">
+            <template>
+              <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600403489553&di=fde33105e7a004ee8e7a3cc66f819137&imgtype=0&src=http%3A%2F%2Fa2.att.hudong.com%2F36%2F48%2F19300001357258133412489354717.jpg" style="width: 120px;height: 120px">
+            </template>
+          </el-table-column>
+        </div>
       </div>
     </div>
     <ul class="user-list">
